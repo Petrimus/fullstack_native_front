@@ -19,6 +19,7 @@ describe('SignIn', () => {
       const { debug, getByTestId, findByTestId } = render(
         <SignInContainer onSubmit={handleSubmit} />
       )
+
       const button = await findByTestId('submitButton');
       // console.log('button', button)
 
@@ -26,6 +27,7 @@ describe('SignIn', () => {
         fireEvent.changeText(getByTestId('usernameField'), 'kalle');
         fireEvent.changeText(getByTestId('passwordField'), 'password');
         fireEvent.press(button);
+        // fireEvent.press(getByTestId('submitButton'));
       })
       // fireEvent.press(button);
       debug();

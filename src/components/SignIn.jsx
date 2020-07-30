@@ -1,10 +1,10 @@
 import React from 'react';
 import {
   View,
-  StyleSheet,
-  Text,
+  StyleSheet, 
   TouchableWithoutFeedback
 } from 'react-native';
+import Text from './Text';
 import FormikTextInput from './FormikTextInput';
 import * as yup from 'yup';
 import { Formik } from 'formik';
@@ -50,7 +50,7 @@ const SignIn = () => {
 };
 
 export const SignInContainer = ({ onSubmit }) => {
-  
+
   return (
     <Formik
       initialValues={{
@@ -84,7 +84,12 @@ const SignInForm = ({ onSubmit }) => {
         onPress={onSubmit}
         testID='submitButton'
       >
-        <Text>Submit</Text>
+        <View style={styles.submitButton}>
+          <Text
+            style={{ color: 'white' }}
+            fontSize='subheading'
+          >Submit</Text>
+        </View>
       </TouchableWithoutFeedback>
     </View >
   )
@@ -106,7 +111,7 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
     borderColor: 'rgba(158, 150, 150, .5)',
     borderRadius: 3,
-    backgroundColor: 'blue'
+    backgroundColor: 'blue',
   }
 });
 
