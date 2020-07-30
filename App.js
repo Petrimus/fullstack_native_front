@@ -1,21 +1,37 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+// import { View, StyleSheet } from 'react-native';
+import Main from './src/components/Main';
+import { NativeRouter } from 'react-router-native';
+import { ApolloProvider } from '@apollo/react-hooks';
 
-export default function App() {
+import createApolloClient from './src/utils/apolloClient';
+import AuthStorage from './src/utils/authStorage'
+import AuthStorageContext from './src/context/AuthStorageContext';
+
+const authStorage = new AuthStorage();
+const apolloClient = createApolloClient(authStorage);
+
+const App = () => {  
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+    <NativeRouter>
+      <ApolloProvider client={apolloClient}>
+        <AuthStorageContext.Provider value={authStorage}>
+          <Main />
+        </AuthStorageContext.Provider>
+      </ApolloProvider>
+    </NativeRouter>
+  )
+};
 
+export default App;
+
+/*
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#ecf0f1'
   },
 });
+*/
