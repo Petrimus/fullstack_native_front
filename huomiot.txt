@@ -26,7 +26,7 @@ Huomioita:
 	fonts: {
 	    main: Platform.select({
 	      android: 'sans-serif',
-	      ios: 'arial',TypeError [ERR_INVALID_ARG_TYPE]: The "path" argument must be of type string. Received an 			instance of Object
+	      ios: 'arial',
 	      default: 'system'
 	    }) 
 	? 
