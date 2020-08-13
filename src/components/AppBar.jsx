@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useApolloClient } from '@apollo/react-hooks';
 import { useContext } from 'react';
-import { useQuery } from '@apollo/react-hooks';
+// import { useQuery } from '@apollo/react-hooks';
+import useAuthorization from '../hooks/useAuthorization';
 import AuthStorageContext from '../context/AuthStorageContext';
-import { GET_AUTHORIZED_USER } from '../graphql/queries'
+// import { GET_AUTHORIZED_USER } from '../graphql/queries'
 
 import {
   View,
@@ -22,6 +23,7 @@ const styles = StyleSheet.create({
     paddingTop: Constants.statusBarHeight,
     backgroundColor: theme.colors.barBackColor,
     flexDirection: 'row',
+    padding: 5
   },
   textStyle: {
     marginHorizontal: 10,
@@ -30,44 +32,44 @@ const styles = StyleSheet.create({
 });
 
 const AppBar = () => {
-  const [auth, setAuth] = useState();
+  const [auth, setAuth] = useState(null);
   const authStorage = useContext(AuthStorageContext);
   const apolloClient = useApolloClient();
+  const { data } = useAuthorization();
 
-  const { data } = useQuery(GET_AUTHORIZED_USER, {
-    fetchPolicy: 'cache-and-network'
-  });
- 
   useEffect(() => {
     if (data) {
       setAuth(data.authorizedUser);
-    }    
+    }
   }, [data])
 
-  console.log('auth', auth)
-  
   const signOut = async () => {
     await authStorage.removeAccessToken();
-    await apolloClient.resetStore(); 
-    setAuth(null);   
+    await apolloClient.resetStore();
+    setAuth(null);
   };
-  
+
   return (
     <View style={styles.container}>
       <ScrollView horizontal>
         <AppBarTab text='Repositories' path='/repositories' />
         {
+          auth && <AppBarTab text='Create a review' path='/review' />
+        }
+        {
+          !auth && <AppBarTab text='Sign up' path='/signup' />
+        }
+        {
           !auth ? <AppBarTab text='Sign In' path='/signin' /> :
             <TouchableWithoutFeedback
               onPress={() => signOut()}
             >
-              <Text style={styles.textStyle}
-                fontSize='subheading'
-              >
+              <Text style={styles.textStyle} >
                 Sign out
               </Text>
             </TouchableWithoutFeedback>
         }
+
       </ScrollView>
     </View>
   );

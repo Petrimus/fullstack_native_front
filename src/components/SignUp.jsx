@@ -8,6 +8,8 @@ import Text from './Text';
 import FormikTextInput from './FormikTextInput';
 import * as yup from 'yup';
 import { Formik } from 'formik';
+
+import useSignUp from '../hooks/useSignUp';
 import useSignIn from '../hooks/useSignIn';
 import { useHistory } from 'react-router-native'
 import AuthStorageContext from '../context/AuthStorageContext';
@@ -17,81 +19,92 @@ import { useContext } from 'react';
 const validationSchema = yup.object().shape({
   username: yup
     .string()
-    .min(0, 'Username must be at least 6 characters long')
+    .min(3, 'Username must be at least 6 characters long')
     .required('Username is required'),
   password: yup
     .string()
     .required('Password is required')
     .min(0, 'Password must at least 6 characters')
+    .matches(/[a-zA-Z]/, 'Password can only contain Latin letters.'),
+  passwordConfirm: yup
+    .string()
+    .oneOf([yup.ref('password')],'Passwords do not match')
+    .required('Password confirm is required')
 });
 
-const SignIn = () => {
+const SignUp = () => {
+  const [signUp] = useSignUp();
   const [signIn] = useSignIn();
   const history = useHistory();
   const authStorage = useContext(AuthStorageContext);
   const apolloClient = useApolloClient();
-  // console.log('sign in ', signIn)
 
-  const onSubmit = async (values) => {
+  const handleSubmit = async (values) => {
     const { username, password } = values;
 
     try {
+      await signUp({ username, password });
       const data = await signIn({ username, password });
-      // console.log('sign in data ', data);     
+      console.log('sign in data ', data);
       await authStorage.setAccessToken(data);
       apolloClient.resetStore();
       history.push('/repositories');
     } catch (e) {
       console.log(e);
     }
-  };
+  }
 
-  return <SignInContainer onSubmit={onSubmit} />
-};
-
-export const SignInContainer = ({ onSubmit }) => {
   return (
     <Formik
       initialValues={{
         username: '',
-        password: ''
+        password: '',
+        passwordConfirm: ''
       }}
-      onSubmit={onSubmit}
+      onSubmit={handleSubmit}
       validationSchema={validationSchema}
     >
-      {({ handleSubmit }) => <SignInForm onSubmit={handleSubmit} />}
+      {({ handleSubmit }) => <SignUpForm onSubmit={handleSubmit} />}
     </Formik>
   )
 }
 
-const SignInForm = ({ onSubmit }) => {
-  // console.log('on submit', onSubmit)
+
+const SignUpForm = ({ onSubmit }) => {
+
   return (
     <View style={styles.container}>
       <FormikTextInput
         name='username'
         placeholder='username'
-        testID='usernameField'
+        testID='signupUsernameField'
       />
       <FormikTextInput
         name='password'
         placeholder='password'
-        testID='passwordField'
+        testID='signUpPasswordField'
+      />
+      <FormikTextInput
+        name='passwordConfirm'
+        placeholder='confirm password'
+        testID='passwordConfirmField'
       />
       <TouchableWithoutFeedback
         onPress={onSubmit}
-        testID='submitButton'
+        testID='signUpSubmitButton'
       >
         <View style={styles.submitButton}>
           <Text
             style={{ color: 'white' }}
             fontSize='subheading'
-          >Submit</Text>
+          >
+            Sign up
+          </Text>
         </View>
       </TouchableWithoutFeedback>
     </View >
   )
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -113,4 +126,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default SignIn;
+export default SignUp

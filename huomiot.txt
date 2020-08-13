@@ -1,0 +1,52 @@
+
+Yleistä: 
+Minusta native osa on hyvä. Aluksi tehtävät tuntuvat jopa helpoilta. Tehtävät vaikeutuvat koko ajan, kun sovellus kasvaa ja samalla mahdollisten bugien määrä kasvoi ja sijainti monimutkaistui. Loppuvaiheessa bugien debuggaamiseen menee jo aikaa. Tutuksi tuli ainakin "undefined is not an object" ja "Can't perform a React state update on an unmounted component" errorit.  "Epäile kaikkea" luki jossain aikaisemmassa osassa. Etenemistä on tuottu hyvin rakentamalla sovellusta pala palalta. Lisäksi on erikseen mainittu mahdollisia bugin kohtia, joihin opiskelija voisi kompastua. Eniten minulla oli ongelmia hookien kanssa. Olisiko tämä johtunut siitä, että ne palauttivat undefined ennen kuin niiden query oli valmis. En ole varma, mutta osa ongelmista saattoi johtua myös emulaattorista. Se on aika raskas meikälaisen koneelle ja muutama virhe tuntui korjaantuvan uudelleen käynnistyksellä ihan kuin itestään. Debuggaamisen opettelu ja tavat ovat tärkeitä. Arviolta kolmanneksen ajasta käytin debuggaamiseen ja logien ihmettelyyn. Toisaalta minulla ei ollut kiire ja aikaa oli käyttää. 
+
+Yksittäisistä tehtävistä käytin selkeästi eniten aikaa 10.19, viimeiseen 10.23 ja 10.16, mutta se johtui touchable komponentista.  
+
+
+Huomioita:
+
+- olen tykännyt, että materiaalin linkit aukeaa blank sivulle, ettei tartte aina monistaa ensin sivua.
+
+- pitäiskö sanaa native selittää jotenkin?
+
+- "There will be model solutions available for each section of this part which you can use to fill in incomplete submissions." Jos ei osaa, niin saako siis täydentää mallivastauksilla?
+
+- tehtävä 10.8. pitääkö tehdä siis seuraava:
+	fonts: {
+	    main: Platform.select({
+	      android: 'sans-serif',
+	      ios: 'arial',TypeError [ERR_INVALID_ARG_TYPE]: The "path" argument must be of type string. Received an 			instance of Object
+	      default: 'system'
+	    }) 
+	? 
+	Ubuntu fonttia ei löydy. Löytyisi Roboto, joka on jonkinlainen defaultti. 
+
+- Osa 3. nvm otti käyttöön (ehkä automaattisesti) node version 14.05. ja tällä ei bcrypti toiminut. Piti ottaa 		käyttöön Noden lts, joka tällä hetkellä oli 12.18. Ja näköjään version joutuupi vaihtamaan, kun projektin 	aloittaa uudestaan uudelleen käynnistyksen jälkeen.
+
+-   10.9. osoittautui mulle vaikeaksi tehtäväksi. useRepositories hookin palauttama repositories object oli koko ajan 		undefined. Minulla oli muidenkin hookkien kanssa ongelmia, koska ne eivät olleet l Lopulta päädyin 		seuraavaan: 
+
+	const { data } = useQuery(GET_REPOSITORIES, {
+	    fetchPolicy: 'cache-and-network'
+	  });
+
+	  const repositories = data ? data : {};
+
+	  return repositories;
+
+- babel.configissa eslint herjasi "module not defined". Lopulta disabloin vain eslint säännön.
+
+-10.14. oli hieman vaikea. Vaikka mitä teki, niin punaista oli ruutu täynnä. Varsinkin authorizedUser queryn 		uudelleen kutsua voisi selittää tarkemmin ja jos tarttee jossain kohtaa käyttää useEfectiä, niin sitä kanssa. 		Minä käytin sitä. En tiedä onko oikein.
+
+- jest-expo@38.0.2 ei toiminut. Herjasi "TypeError [ERR_INVALID_ARG_TYPE]: The "path" argument must be of type 		string. Received an instance of Object". Löysin pari fixiä ja lopulta käytin jest-expo@37.0.0.
+
+- react-native-paper provider piti olla app komponentin alussa. Kun määrittelin sen vasta Menu kompontissa, se jäi 	flatlistin alle. Netistä ei löytynyt ohjeita.
+
+- Pitäiskö back endissä olla myös deleteUser mutaatio, ettei käyttäjien määrä kasva liikaa, kun testailee ja 		hölmöilee.
+
+- Olisikohan emulaattori mennyt jollain kevyemmällä android os:llä. Latasin itse Android 10.0+ (Google play) ja kokoa 		on oli 11GB ja oli minun koneelle raskas.
+
+- Viimeisessä tehtävässä ehkä näyttäisin vielä tarkemmin jotenkin miten first ja after muuttujia käytetään. Itse 	päädyin lisäämään firstin pakollisena queryyn ! ja after optiona. UseQuerissä en kutsunut afteria mutta fetch 		more querissä kyllä.
+
+

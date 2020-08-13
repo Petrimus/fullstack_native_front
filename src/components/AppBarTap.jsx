@@ -16,7 +16,7 @@ const AppBarTap = ({ text, path }) => {
 
   return (
     <Link to={path} component={TouchableOpacity} activeOpacity={0.8} >
-      <Text style={styles.container} fontSize='subheading'>
+      <Text style={styles.container} >
         {text}
       </Text>
     </Link>

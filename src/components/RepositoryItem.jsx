@@ -7,13 +7,14 @@ import {
 // import theme from '../theme';
 import Text from './Text';
 import { numFormatter } from '../utils/utils';
-
+import { Button } from 'react-native-paper';
+import * as WebBrowser from 'expo-web-browser';
 
 
 const headerStyles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    flexGrow: 1,
+    flex: 0
   },
   avatar: {
     width: 45,
@@ -58,6 +59,7 @@ const Header = ({ name, avatar, description }) => (
 
 const lanquageStyles = StyleSheet.create({
   container: {
+    flex: 0,
     alignSelf: 'flex-start',
     padding: 10,
     marginLeft: 20,
@@ -83,8 +85,9 @@ const Language = ({ language }) => {
 const infoStyles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    flex: 1,
-    justifyContent: 'space-between'
+    flex: 0,
+    justifyContent: 'space-between',
+    marginVertical: 10
   },
   infoItem: {
     flexDirection: 'column',
@@ -146,13 +149,22 @@ const Info = ({
 
 const itemStyles = StyleSheet.create({
   container: {
+    justifyContent: "space-between",
     backgroundColor: '#f9c2ff',
     padding: 20,
-    marginHorizontal: 8,
+    marginHorizontal: 10
+  },
+  button: {
+    flex: 0
   }
 });
 
-const RepositoryItem = ({ item }) => {
+const RepositoryItem = ({ item, showButton }) => {
+  
+  if (!item) {
+    return <Text>Item is loading</Text>
+  }
+
   const {
     fullName,
     description,
@@ -161,8 +173,15 @@ const RepositoryItem = ({ item }) => {
     forksCount,
     reviewCount,
     ratingAverage,
-    ownerAvatarUrl
+    ownerAvatarUrl,
+    url
   } = item;
+
+  
+
+  const handleOpenWithWebBrowser = (url) => {
+    WebBrowser.openBrowserAsync(url);
+  };
 
   return (
     <View style={itemStyles.container}>
@@ -178,13 +197,19 @@ const RepositoryItem = ({ item }) => {
         reviewCount={reviewCount}
         ratingAverage={ratingAverage}
       />
+      {
+        showButton && (
+          <View style={itemStyles.button}>
+            <Button
+              mode="contained" 
+              onPress={() => handleOpenWithWebBrowser(url)}
+            >
+              Open in Github
+            </Button>
+          </View>
+        )}
     </View>
   )
 }
 
 export default RepositoryItem
-
-/*
-alignItems: 'stretch',
-*/
-
